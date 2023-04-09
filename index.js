@@ -2,38 +2,22 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
-import authenticate from "./middleware/auth.js";
-import UserService from "./services/user.js";
+import videoRoutes from './routes/videoRoutes.js';
 
 dotenv.config();
 
 const app = express();
+app.use(express.json());
 const port = process.env.PORT;
 const uri = process.env.MONGODB_URI;
-const secret = process.env.JWT_SECRET;
 
 mongoose
     .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log("MongoDB connected successfully");
         const db = mongoose.connection;
-        const userService = new UserService(db);
 
-        app.post("/register", async (req, res) => {
-            const { email, password } = req.body;
-            const token = await userService.register(email, password, secret);
-            return res.json({ token });
-        });
-
-        app.post("/login", async (req, res) => {
-            const { email, password } = req.body;
-            const token = await userService.login(email, password, secret);
-            return res.json({ token });
-        });
-
-        app.get("/protected", authenticate(secret), (req, res) => {
-            return res.json({ message: "Access granted", user: req.user });
-        });
+        app.use('/api', videoRoutes); // Use the video routes under the '/api' path
 
         app.listen(port, () => {
             console.log(`Server is running on port ${port}`);
