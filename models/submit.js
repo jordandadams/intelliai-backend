@@ -14,13 +14,12 @@ const gamesList = [
 ];
 
 // Define a regular expression for allowed video platforms
-const videoLinkRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|twitch\.tv|medal\.tv|streamable\.com)\/.+/;
+const videoLinkRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|clips\.twitch\.tv|twitter\.com|medal\.tv|streamable\.com)\/.+/;
 
 const videoSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
-        unique: true,
         lowercase: true,
         minlength: 3,
         maxlength: 15,
@@ -34,6 +33,7 @@ const videoSchema = new mongoose.Schema({
     videoLink: {
         type: String,
         required: true,
+        unique: true,
         validate: {
             validator: (value) => {
                 return videoLinkRegex.test(value);

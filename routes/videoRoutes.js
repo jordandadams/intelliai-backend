@@ -3,7 +3,7 @@ import videoService from '../services/videoService.js';
 
 const router = express.Router();
 
-// GET endpoint to return a random video link based on the game
+// GET endpoint to return all video links based on the game
 router.get('/video/:game', async (req, res) => {
     try {
         const { game } = req.params;
@@ -12,9 +12,7 @@ router.get('/video/:game', async (req, res) => {
         if (filteredVideos.length === 0) {
             return res.status(404).json({ message: 'No videos found for this game' });
         }
-        const randomIndex = Math.floor(Math.random() * filteredVideos.length);
-        const randomVideo = filteredVideos[randomIndex];
-        res.json(randomVideo);
+        res.json(filteredVideos); // Return all filtered videos
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
